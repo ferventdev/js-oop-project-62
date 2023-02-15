@@ -8,9 +8,9 @@ class StringSchema extends Schema {
     return this;
   }
 
-  minLength(len) {
+  minLength(len = 0) {
     this.predicates.push(
-      (v) => v === undefined || v === null || v.length >= len,
+      (v) => v === undefined || v === null || v.length >= Math.max(0, len),
     );
     return this;
   }
