@@ -12,6 +12,7 @@ beforeEach(() => {
 });
 
 test('absent', () => {
+  expect(schema.isValid()).toBe(true);
   expect(schema.isValid(undefined)).toBe(true);
   expect(schema.isValid(null)).toBe(true);
   expect(schema.isValid('')).toBe(true);
@@ -30,6 +31,7 @@ test('wrong type', () => {
 test('required', () => {
   schema.required();
 
+  expect(schema.isValid()).toBe(false);
   expect(schema.isValid(undefined)).toBe(false);
   expect(schema.isValid(null)).toBe(false);
   expect(schema.isValid('')).toBe(false);

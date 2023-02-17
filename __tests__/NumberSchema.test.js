@@ -12,6 +12,7 @@ beforeEach(() => {
 });
 
 test('absent or NaN', () => {
+  expect(schema.isValid()).toBe(true);
   expect(schema.isValid(undefined)).toBe(true);
   expect(schema.isValid(null)).toBe(true);
   expect(schema.isValid(NaN)).toBe(true);
@@ -31,6 +32,7 @@ test('wrong type', () => {
 test('required', () => {
   schema.required();
 
+  expect(schema.isValid()).toBe(false);
   expect(schema.isValid(undefined)).toBe(false);
   expect(schema.isValid(null)).toBe(false);
 
