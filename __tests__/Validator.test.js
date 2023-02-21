@@ -1,5 +1,6 @@
 import ArraySchema from '../src/ArraySchema.js';
 import NumberSchema from '../src/NumberSchema.js';
+import ObjectSchema from '../src/ObjectSchema.js';
 import Schema from '../src/Schema.js';
 import StringSchema from '../src/StringSchema.js';
 import Validator from '../src/Validator.js';
@@ -22,4 +23,9 @@ test('validator', () => {
   expect(arraySchema).not.toBeNull();
   expect(arraySchema).toBeInstanceOf(ArraySchema);
   expect(arraySchema).toBeInstanceOf(Schema);
+
+  const objectSchema = v.object();
+  expect(objectSchema).not.toBeNull();
+  expect(objectSchema).toBeInstanceOf(ObjectSchema);
+  expect(objectSchema).toBeInstanceOf(Schema);
 });
