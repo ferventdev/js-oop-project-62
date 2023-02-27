@@ -133,3 +133,50 @@ test('full range & positive', () => {
   expect(schema.isValid(Number.NEGATIVE_INFINITY)).toBe(false);
   expect(schema.isValid(NaN)).toBe(false);
 });
+
+test('custom validation 1', () => {
+  const v = new Validator();
+  const customFn = (value, min) => value >= min;
+  v.addValidator('number', customFn.name, customFn);
+  const numSchema = v.number().test(customFn.name, 5);
+
+  expect(numSchema.isValid()).toBe(true);
+  expect(numSchema.isValid(undefined)).toBe(true);
+  expect(numSchema.isValid(null)).toBe(true);
+
+  expect(numSchema.isValid(NaN)).toBe(false);
+  expect(numSchema.isValid(0)).toBe(false);
+  expect(numSchema.isValid(-100)).toBe(false);
+  expect(numSchema.isValid(3)).toBe(false);
+  expect(numSchema.isValid(4.999)).toBe(false);
+
+  expect(numSchema.isValid(5)).toBe(true);
+  expect(numSchema.isValid(5.001)).toBe(true);
+  expect(numSchema.isValid(Number.POSITIVE_INFINITY)).toBe(true);
+});
+
+test('custom validation 2', () => {
+  const v = new Validator();
+  const customFn = (val, lower, upper) => lower < val && val < upper;
+  v.addValidator('number', customFn.name, customFn);
+  const numSchema = v.number().test(customFn.name, -100, 100);
+
+  expect(numSchema.isValid()).toBe(true);
+  expect(numSchema.isValid(undefined)).toBe(true);
+  expect(numSchema.isValid(null)).toBe(true);
+
+  expect(numSchema.isValid(0)).toBe(true);
+  expect(numSchema.isValid(-99.999)).toBe(true);
+  expect(numSchema.isValid(99.999)).toBe(true);
+  expect(numSchema.isValid(77)).toBe(true);
+
+  expect(numSchema.isValid(-100)).toBe(false);
+  expect(numSchema.isValid(100)).toBe(false);
+  expect(numSchema.isValid(5000)).toBe(false);
+  expect(numSchema.isValid(-333)).toBe(false);
+  expect(numSchema.isValid(Number.MAX_SAFE_INTEGER)).toBe(false);
+  expect(numSchema.isValid(Number.POSITIVE_INFINITY)).toBe(false);
+  expect(numSchema.isValid(Number.MIN_SAFE_INTEGER)).toBe(false);
+  expect(numSchema.isValid(Number.NEGATIVE_INFINITY)).toBe(false);
+  expect(numSchema.isValid(NaN)).toBe(false);
+});

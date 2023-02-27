@@ -138,3 +138,30 @@ test('two shapes', () => {
   expect(schema.isValid({ name: 'jack', age: 10 })).toBe(true);
   expect(schema.isValid({ name: 'jack', age: 1000 })).toBe(true);
 });
+
+test('custom validation', () => {
+  const v = new Validator();
+  const customFn = (obj, key, value) => key in obj && obj[key] === value;
+  v.addValidator('object', customFn.name, customFn);
+  const objSchema = v.object().test(customFn.name, 'age', 25);
+
+  expect(objSchema.isValid()).toBe(true);
+  expect(objSchema.isValid(undefined)).toBe(true);
+  expect(objSchema.isValid(null)).toBe(true);
+
+  expect(objSchema.isValid(Object.create(null))).toBe(false);
+  expect(objSchema.isValid({})).toBe(false);
+  expect(objSchema.isValid('age')).toBe(false);
+  expect(objSchema.isValid(25)).toBe(false);
+  expect(objSchema.isValid({ age: undefined })).toBe(false);
+  expect(objSchema.isValid({ age: null })).toBe(false);
+  expect(objSchema.isValid({ age: '' })).toBe(false);
+  expect(objSchema.isValid({ age: NaN })).toBe(false);
+  expect(objSchema.isValid({ age: 0 })).toBe(false);
+  expect(objSchema.isValid({ age: '25' })).toBe(false);
+  expect(objSchema.isValid({ age: [25] })).toBe(false);
+  expect(objSchema.isValid({ ages: 25 })).toBe(false);
+
+  expect(objSchema.isValid({ age: 25 })).toBe(true);
+  expect(objSchema.isValid({ name: 'jack', age: 25 })).toBe(true);
+});

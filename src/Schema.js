@@ -1,7 +1,8 @@
 class Schema {
-  constructor() {
+  constructor(moreValidationFuncs = {}) {
     this.predicates = [];
     this.obligatory = false;
+    this.moreValidationFuncs = { ...moreValidationFuncs };
   }
 
   isValid(value) {
@@ -11,6 +12,16 @@ class Schema {
 
   required() {
     this.obligatory = true;
+    return this;
+  }
+
+  test(funcName, ...args) {
+    if (funcName in this.moreValidationFuncs) {
+      const fn = this.moreValidationFuncs[funcName].bind(this);
+      this.predicates.push(
+        (v) => v === undefined || v === null || fn(v, ...args),
+      );
+    }
     return this;
   }
 

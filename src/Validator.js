@@ -5,20 +5,34 @@ import ObjectSchema from './ObjectSchema.js';
 import StringSchema from './StringSchema.js';
 
 class Validator {
+  moreValidationFuncs = {
+    string: {},
+    number: {},
+    array: {},
+    object: {},
+  };
+
+  addValidator(type, name, fn) {
+    if (type in this.moreValidationFuncs && typeof fn === 'function') {
+      this.moreValidationFuncs[type][name] = fn;
+    }
+    return this;
+  }
+
   string() {
-    return new StringSchema();
+    return new StringSchema(this.moreValidationFuncs.string);
   }
 
   number() {
-    return new NumberSchema();
+    return new NumberSchema(this.moreValidationFuncs.number);
   }
 
   array() {
-    return new ArraySchema();
+    return new ArraySchema(this.moreValidationFuncs.array);
   }
 
   object() {
-    return new ObjectSchema();
+    return new ObjectSchema(this.moreValidationFuncs.object);
   }
 }
 

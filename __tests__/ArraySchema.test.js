@@ -124,3 +124,30 @@ test('sizeof < 0', () => {
   expect(schema.isValid(Array.of(1, 2, 3))).toBe(false);
   expect(schema.isValid(Array.from({ length: 1 }))).toBe(false);
 });
+
+test('custom validation', () => {
+  const v = new Validator();
+  const customFn = (value, first) => value.length > 0 && value[0] === first;
+  v.addValidator('array', customFn.name, customFn);
+  const arrSchema = v.array().test(customFn.name, '1st');
+
+  expect(arrSchema.isValid()).toBe(true);
+  expect(arrSchema.isValid(undefined)).toBe(true);
+  expect(arrSchema.isValid(null)).toBe(true);
+
+  expect(arrSchema.isValid([])).toBe(false);
+  // eslint-disable-next-line no-array-constructor
+  expect(arrSchema.isValid(new Array())).toBe(false);
+  expect(arrSchema.isValid(new Array(0))).toBe(false);
+  expect(arrSchema.isValid(Array.of())).toBe(false);
+  expect(arrSchema.isValid([1])).toBe(false);
+  expect(arrSchema.isValid([true])).toBe(false);
+  expect(arrSchema.isValid([null])).toBe(false);
+  expect(arrSchema.isValid([''])).toBe(false);
+  expect(arrSchema.isValid(['no'])).toBe(false);
+
+  expect(arrSchema.isValid(['1st'])).toBe(true);
+  expect(arrSchema.isValid(['1st', '2nd'])).toBe(true);
+  expect(arrSchema.isValid(Array.of('1st'))).toBe(true);
+  expect(arrSchema.isValid(Array.of('1st', '2nd'))).toBe(true);
+});

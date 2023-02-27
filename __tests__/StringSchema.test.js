@@ -100,3 +100,23 @@ test('min length < 0', () => {
   expect(schema.isValid(' ')).toBe(true);
   expect(schema.isValid('smth')).toBe(true);
 });
+
+test('custom validation', () => {
+  const v = new Validator();
+  const customFn = (value, start) => value.startsWith(start);
+  v.addValidator('string', customFn.name, customFn);
+  const strSchema = v.string().test(customFn.name, 'H');
+
+  expect(strSchema.isValid()).toBe(true);
+  expect(strSchema.isValid(undefined)).toBe(true);
+  expect(strSchema.isValid(null)).toBe(true);
+
+  expect(strSchema.isValid('')).toBe(false);
+  expect(strSchema.isValid(' ')).toBe(false);
+  expect(strSchema.isValid('smth')).toBe(false);
+  expect(strSchema.isValid('hello')).toBe(false);
+  expect(strSchema.isValid(' Hello')).toBe(false);
+
+  expect(strSchema.isValid('H')).toBe(true);
+  expect(strSchema.isValid('Hello')).toBe(true);
+});
