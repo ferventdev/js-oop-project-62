@@ -5,12 +5,14 @@ import ObjectSchema from './ObjectSchema.js';
 import StringSchema from './StringSchema.js';
 
 class Validator {
-  moreValidationFuncs = {
-    string: {},
-    number: {},
-    array: {},
-    object: {},
-  };
+  constructor() {
+    this.moreValidationFuncs = {
+      string: {},
+      number: {},
+      array: {},
+      object: {},
+    };
+  }
 
   addValidator(type, name, fn) {
     if (type in this.moreValidationFuncs && typeof fn === 'function') {

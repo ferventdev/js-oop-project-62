@@ -1,3 +1,5 @@
+/* eslint-disable import/no-named-as-default-member */
+/* eslint-disable import/no-named-as-default */
 import ArraySchema from '../src/ArraySchema.js';
 import NumberSchema from '../src/NumberSchema.js';
 import ObjectSchema from '../src/ObjectSchema.js';
